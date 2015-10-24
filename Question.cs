@@ -28,27 +28,20 @@ namespace VirtualEmily
                 if (answers.Count == 0)
                     return QuestionStatus.NotSeen;
 
-                if (answers.Count <= 3) {
-                    for (int i = 0; i < answers.Count; ++i) {
-                        if (answers[i])
-                            ++right;
-                        else
-                            ++wrong;
-                    }
-                    if (right > wrong)
-                        return QuestionStatus.Partial;
-                    else
-                        return QuestionStatus.Wrong;
-                }
-
-                for (int i = Math.Max(0, answers.Count - 6); i < answers.Count; ++i) {
+                // Check the last 7 answers.
+                for (int i = Math.Max(0, answers.Count - 7); i < answers.Count; ++i) {
                     if (answers[i])
                         ++right;
                     else
                         ++wrong;
                 }
 
-                if (answers[answers.Count - 1] && wrong <= 1)
+                // To be considered that we fully know it:
+                //  - Have seend at least 3 teams.
+                //  - 3 or more right than wrong.
+                //  - We got it right the last time.
+                // We partially know if we got it at least as right as wrong.
+                if (answers.Count >= 3 && right - wrong >= 3 && answers[answers.Count - 1])
                     return QuestionStatus.Right;
                 else if (right >= wrong)
                     return QuestionStatus.Partial;

@@ -43,7 +43,10 @@ namespace VirtualEmily
 
         void PresentNextQuestion()
         {
+            quiz.SaveAnswers(answerData);
+
             QuizStats stats = quiz.CalcStats();
+            UpdateStatusGrid(stats);
 
             // statusLabel.Content = string.Format("{0} of {1} known", stats.CountRight, stats.Total);
 
@@ -56,6 +59,14 @@ namespace VirtualEmily
             dontKnow = false;
 
             Util.PlayMedia(mediaElement, question.StartTime, question.Duration, true);
+        }
+
+        private void UpdateStatusGrid(QuizStats stats)
+        {
+            statusGrid.ColumnDefinitions[0].Width = new GridLength(stats.CountUnseen, GridUnitType.Star);
+            statusGrid.ColumnDefinitions[1].Width = new GridLength(stats.CountWrong, GridUnitType.Star);
+            statusGrid.ColumnDefinitions[2].Width = new GridLength(stats.CountPartial, GridUnitType.Star);
+            statusGrid.ColumnDefinitions[3].Width = new GridLength(stats.CountRight, GridUnitType.Star);
         }
 
         private void administerButtonClicked(object sender, RoutedEventArgs e)
@@ -105,6 +116,7 @@ namespace VirtualEmily
         private void startButtonClicked(object sender, RoutedEventArgs e)
         {
             startButton.Visibility = Visibility.Hidden;
+            buttonAdminister.Visibility = Visibility.Hidden;
 
             PresentNextQuestion();
         }
