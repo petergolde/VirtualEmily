@@ -37,6 +37,8 @@ namespace VirtualEmily
 
             InitializeComponent();
 
+            quizGrid.Visibility = Visibility.Hidden;
+
             wrongButton.Visibility = Visibility.Hidden;
             correctButton.Visibility = Visibility.Hidden;
             checkButton.Visibility = Visibility.Hidden;
@@ -44,7 +46,6 @@ namespace VirtualEmily
             continueButton.Visibility = Visibility.Hidden;
 
             buttonAdminister.Visibility = Visibility.Hidden;
-
         }
 
         void PresentNextQuestion()
@@ -128,8 +129,8 @@ namespace VirtualEmily
 
         private void startButtonClicked(object sender, RoutedEventArgs e)
         {
-            startButton.Visibility = Visibility.Hidden;
-            buttonAdminister.Visibility = Visibility.Hidden;
+            initialGrid.Visibility = Visibility.Hidden;
+            quizGrid.Visibility = Visibility.Visible;
 
             quiz.LoadQuestions(directory);
             quiz.LoadAnswers();
