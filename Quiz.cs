@@ -13,21 +13,50 @@ namespace VirtualEmily
         Random random = new Random();
         Question lastQuestion;
 
+        public int QuestionCount
+        {
+            get { return questions.Count;  }
+        }
+
+        public Question GetQuestion(int index)
+        {
+            return questions[index];
+        }
+
         public void AddQuestion(TimeSpan start, TimeSpan duration)
         {
             questions.Add(new Question(start, duration));
         }
 
+        public void AddQuestion(string pictureFileName, string soundFileName)
+        {
+            questions.Add(new Question(pictureFileName, soundFileName));
+        }
+
+        public void ReplaceQuestion(int index, string pictureFileName, string soundFileName)
+        {
+            questions[index] = new Question(pictureFileName, soundFileName);
+        }
+
+        //public void SaveQuestions(string fileName)
+        //{
+        //    List<string> output = new List<string>();
+        //    foreach (Question question in questions) {
+        //        output.Add(string.Format("{0},{1}", question.StartTime.TotalSeconds, question.Duration.TotalSeconds));
+        //    }
+
+        //    File.WriteAllLines(fileName, output);
+        //}
+
         public void SaveQuestions(string fileName)
         {
             List<string> output = new List<string>();
             foreach (Question question in questions) {
-                output.Add(string.Format("{0},{1}", question.StartTime.TotalSeconds, question.Duration.TotalSeconds));
+                output.Add(string.Format("{0},{1}", question.SoundFileName, question.PictureFileName));
             }
 
             File.WriteAllLines(fileName, output);
         }
-
         public void LoadQuestions(string fileName)
         {
             if (File.Exists(fileName)) {
@@ -35,7 +64,7 @@ namespace VirtualEmily
                 foreach (string line in input) {
                     string[] fields = line.Split(',');
                     if (fields.Length >= 2) {
-                        AddQuestion(TimeSpan.FromSeconds(double.Parse(fields[0])), TimeSpan.FromSeconds(double.Parse(fields[1])));
+                        AddQuestion(fields[1], fields[0]);
                     }
                 }
             }

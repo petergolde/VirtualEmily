@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,12 +23,25 @@ namespace VirtualEmily
     {
         Quiz quiz;
         string fileName;
+        string videoFileName = "radicals2.wmv";
 
         public AdminWindow(Quiz quiz, string filename)
         {
             InitializeComponent();
             this.quiz = quiz;
             this.fileName = filename;
+
+            comboQuestionNum.Items.Clear();
+            for (int i = 0; i < quiz.QuestionCount; ++i) {
+                comboQuestionNum.Items.Add(i.ToString());
+            }
+
+            comboQuestionNum.SelectedIndex = 0;
+        }
+
+        public int QuestionNumber
+        {
+            get { return int.Parse((string) comboQuestionNum.SelectedItem); }
         }
 
         private void testButtonClicked(object sender, RoutedEventArgs e)
@@ -37,6 +52,20 @@ namespace VirtualEmily
                 Util.PlayMedia(mediaElement, start, duration, false);
             }
         }
+
+
+        private void buttonUpdateClicked(object sender, RoutedEventArgs e)
+        {
+            if (startTime.Value.HasValue && lengthTime.Value.HasValue) {
+                TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
+                TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
+                string soundFile = CreateSoundFile(QuestionNumber, start, duration);
+                SoundPlayer soundPlayer = new SoundPlayer(soundFile);
+                soundPlayer.Play();
+                quiz.ReplaceQuestion(QuestionNumber, textBoxPicture.Text, soundFile);
+            }
+        }
+
 
         private void startChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -58,6 +87,21 @@ namespace VirtualEmily
                 TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
                 quiz.AddQuestion(start, duration);
             }
+        }
+
+        private string CreateSoundFile(int questionNumber, TimeSpan start, TimeSpan duration)
+        {
+            string cmdLineArgs = string.Format("-ss {0} -t {1} -i {2} sound{3}.wav", start.TotalSeconds, duration.TotalSeconds, videoFileName, questionNumber);
+            Process process = Process.Start("ffmpeg.exe", cmdLineArgs);
+            process.WaitForExit();
+            return String.Format("sound{0}.wav", questionNumber);
+        }
+
+        private void comboQuestionNumSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Question question = quiz.GetQuestion(QuestionNumber);
+            startTime.Value = question.StartTime.TotalSeconds;
+            lengthTime.Value = question.Duration.TotalSeconds;
         }
     }
 }

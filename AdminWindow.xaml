@@ -10,13 +10,15 @@
     <Grid x:Name="mediaElement1">
         <MediaElement x:Name="mediaElement" HorizontalAlignment="Stretch" Margin="0,0,0,120" VerticalAlignment="Stretch" Source="radicals.wmv" LoadedBehavior="Manual" Volume="1"/>
         <Grid x:Name="adminstrationPanel" HorizontalAlignment="Stretch" Height="88" VerticalAlignment="Bottom" Visibility="Visible" Background="#FFF02525">
-            <xctk:DoubleUpDown x:Name="startTime" HorizontalAlignment="Left" Margin="53,5,0,0" VerticalAlignment="Top" Width="70" Increment="0.1" Minimum="0" ValueChanged="startChanged"/>
-            <Label x:Name="label" Content="Start:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.927,0.477"/>
-            <xctk:DoubleUpDown x:Name="lengthTime" HorizontalAlignment="Left" Margin="203,5,0,0" VerticalAlignment="Top" Width="70" Increment="0.1" Minimum="0"/>
-            <Label x:Name="label2" Content="Length:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="149,0,0,0" RenderTransformOrigin="1.44,0.679"/>
-            <Button x:Name="buttonTest" Content="Test" HorizontalAlignment="Left" Margin="3,30,0,0" VerticalAlignment="Top" Width="48" Click="testButtonClicked"/>
-            <Button x:Name="button2" Content="Add" HorizontalAlignment="Left" Margin="56,30,0,0" VerticalAlignment="Top" Width="52" Click="addButtonClicked"/>
-            <Button x:Name="button" Content="Save" HorizontalAlignment="Left" Margin="415,35,0,0" VerticalAlignment="Top" Width="75" Click="saveButtonClicked"/>
+            <xctk:DoubleUpDown x:Name="startTime" HorizontalAlignment="Left" Margin="171,5,0,0" VerticalAlignment="Top" Width="70" Increment="0.1" Minimum="0" ValueChanged="startChanged"/>
+            <Label x:Name="label" Content="Start:" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.927,0.477" Margin="118,0,0,0"/>
+            <xctk:DoubleUpDown x:Name="lengthTime" HorizontalAlignment="Left" Margin="321,5,0,0" VerticalAlignment="Top" Width="70" Increment="0.1" Minimum="0"/>
+            <Label x:Name="label2" Content="Length:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="267,0,0,0" RenderTransformOrigin="1.44,0.679"/>
+            <Button x:Name="buttonTest" Content="Test" HorizontalAlignment="Left" Margin="407,3,0,0" VerticalAlignment="Top" Width="48" Click="testButtonClicked"/>
+            <Button x:Name="button" Content="Save" HorizontalAlignment="Left" Margin="415,58,0,0" VerticalAlignment="Top" Width="75" Click="saveButtonClicked"/>
+            <ComboBox x:Name="comboQuestionNum" HorizontalAlignment="Left" Height="21" Margin="10,5,0,0" VerticalAlignment="Top" Width="103" SelectionChanged="comboQuestionNumSelectionChanged"/>
+            <TextBox x:Name="textBoxPicture" HorizontalAlignment="Left" Height="24" Margin="126,40,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="125"/>
+            <Button x:Name="buttonUpdate" Content="Update" HorizontalAlignment="Left" Margin="407,25,0,0" VerticalAlignment="Top" Width="75" Click="buttonUpdateClicked"/>
         </Grid>
     </Grid>
 </Window>

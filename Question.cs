@@ -11,12 +11,21 @@ namespace VirtualEmily
         public TimeSpan StartTime { get; private set; }
         public TimeSpan Duration { get; private set; }
 
+        public string PictureFileName { get; private set; }
+        public string SoundFileName { get; private set; }
+
         private List<bool> answers = new List<bool>();
 
         public Question(TimeSpan start, TimeSpan duration)
         {
             StartTime = start;
             Duration = duration;
+        }
+
+        public Question(string pictureFileName, string soundFileName)
+        {
+            PictureFileName = pictureFileName;
+            SoundFileName = soundFileName;
         }
 
         public QuestionStatus Status

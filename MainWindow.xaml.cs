@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+using Path = System.IO.Path;
+
 namespace VirtualEmily
 {
     /// <summary>
@@ -24,6 +27,7 @@ namespace VirtualEmily
         Quiz quiz;
         string fileName = "questionData.txt";
         string answerData = "answerData.txt";
+        string directory = ".";
         Question question;
         bool dontKnow = false;
 
@@ -58,7 +62,20 @@ namespace VirtualEmily
             continueButton.Visibility = Visibility.Hidden;
             dontKnow = false;
 
-            Util.PlayMedia(mediaElement, question.StartTime, question.Duration, true);
+            ShowQuestion();
+        }
+
+        void ShowQuestion()
+        {
+            string path = Path.GetFullPath(Path.Combine(directory, question.PictureFileName));
+            imageDisplay.Source =  new BitmapImage(new Uri(path));
+        }
+
+        void PlayAnswer()
+        {
+            ShowQuestion();
+            SoundPlayer soundPlayer = new SoundPlayer(Path.Combine(directory, question.SoundFileName));
+            soundPlayer.Play();
         }
 
         private void UpdateStatusGrid(QuizStats stats)
@@ -94,7 +111,7 @@ namespace VirtualEmily
                 dontKnowButton.Visibility = Visibility.Hidden;
             }
 
-            Util.PlayMedia(mediaElement, question.StartTime, question.Duration, false);
+            PlayAnswer();
         }
 
         private void windowLoaded(object sender, RoutedEventArgs e)
@@ -108,10 +125,6 @@ namespace VirtualEmily
             quiz.SaveAnswers(answerData);
         }
 
-        private void mediaLoaded(object sender, RoutedEventArgs e)
-        {
-            Util.PlayMedia(mediaElement, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(20), true);
-        }
 
         private void startButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -129,7 +142,8 @@ namespace VirtualEmily
 
         private void dontKnowButtonClicked(object sender, RoutedEventArgs e)
         {
-            Util.PlayMedia(mediaElement, question.StartTime, question.Duration, false);
+            PlayAnswer();
+
             dontKnowButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Visible;
             dontKnow = true;
