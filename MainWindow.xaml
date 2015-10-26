@@ -13,17 +13,17 @@
             <Button x:Name="buttonAdminister" Content="Administer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="administerButtonClicked"/>
             <StackPanel HorizontalAlignment="Center" Height="60" Margin="0,180,0,0" VerticalAlignment="Center" Width="180" Orientation="Horizontal">
                 <Label x:Name="label" Content="Time Limit:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <xctk:IntegerUpDown HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="0,4,0,0" Value="15"/>
+                <xctk:IntegerUpDown x:Name="timeLimitSetting" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="0,4,0,0" Value="15"/>
                 <Label x:Name="label1" Content="minutes" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </StackPanel>
         </Grid>
 
-        <Grid x:Name="quizGrid" Visibility="Hidden">
+        <Grid x:Name="quizGrid">
             <Image x:Name="imageDisplay" HorizontalAlignment="Stretch" Margin="0,0,0,92" VerticalAlignment="Stretch" />
             <Button x:Name="checkButton" Content="Check Answer" HorizontalAlignment="Right" Margin="0,0,10,46" VerticalAlignment="Bottom" Width="114" Click="checkAnswerClicked" Visibility="Visible" Height="34"/>
             <Button x:Name="correctButton" Content="Correct!" HorizontalAlignment="Right" Margin="0,0,129,46" VerticalAlignment="Bottom" Width="75" Background="#FF07F512" Click="correctButtonClicked" Visibility="Visible" Height="34"/>
             <Button x:Name="wrongButton" Content="Wrong" HorizontalAlignment="Right" Margin="0,0,209,46" VerticalAlignment="Bottom" Width="75" Background="#FFFF5D5D" Click="wrongButtonClicked" Visibility="Visible" Height="34"/>
-            <Label x:Name="statusLabel" Content="" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="9.333" Width="170" HorizontalContentAlignment="Right"/>
+            <Label x:Name="timeLeftLabel" Content="" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="170" HorizontalContentAlignment="Left"/>
             <Button x:Name="dontKnowButton" Content="Don't Know" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="114" Click="dontKnowButtonClicked" Visibility="Visible" Height="31"/>
             <Button x:Name="continueButton" Content="Continue" HorizontalAlignment="Right" Margin="0,0,129,46" VerticalAlignment="Bottom" Width="114" Click="continueButtonClicked" Visibility="Visible" Background="#FFDAEE12" Height="34"/>
             <Grid HorizontalAlignment="Stretch" Height="22" Margin="156,0,157,4" VerticalAlignment="Bottom">
@@ -42,6 +42,13 @@
                     </Grid>
                 </Border>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="doneGrid" >
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <Label Content="Complete!" FontSize="48" FontFamily="Segoe UI Black"/>
+                <TextBlock x:Name="resultsText"></TextBlock>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

@@ -28,7 +28,10 @@ namespace VirtualEmily
         string fileName = "questionData.txt";
         string answerData = "answerData.txt";
         string directory = ".";
+        TimeSpan timeLimit;
+        DateTime finishTime;
         Question question;
+        DispatcherTimer timer = new DispatcherTimer();
         bool dontKnow = false;
 
         public MainWindow()
@@ -38,6 +41,7 @@ namespace VirtualEmily
             InitializeComponent();
 
             quizGrid.Visibility = Visibility.Hidden;
+            doneGrid.Visibility = Visibility.Hidden;
 
             wrongButton.Visibility = Visibility.Hidden;
             correctButton.Visibility = Visibility.Hidden;
@@ -46,10 +50,27 @@ namespace VirtualEmily
             continueButton.Visibility = Visibility.Hidden;
 
             buttonAdminister.Visibility = Visibility.Hidden;
+
+            timer.Tick += Timer_Tick;
+            timer.Interval = TimeSpan.FromSeconds(0.5);
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (timeLimit != default(TimeSpan)) {
+                TimeSpan timeLeft = finishTime - DateTime.Now;
+                timeLeftLabel.Content = timeLeft < default(TimeSpan) ? "Done" : timeLeft.ToString(@"m\:ss");
+            }
         }
 
         void PresentNextQuestion()
         {
+            if (timeLimit != default(TimeSpan) && DateTime.Now > finishTime) {
+                Done();
+                return;
+            }
+
             quiz.SaveAnswers();
 
             QuizStats stats = quiz.CalcStats();
@@ -72,6 +93,15 @@ namespace VirtualEmily
         {
             string path = Path.GetFullPath(Path.Combine(directory, question.PictureFileName));
             imageDisplay.Source =  new BitmapImage(new Uri(path));
+        }
+
+        void Done()
+        {
+            quizGrid.Visibility = Visibility.Hidden;
+            doneGrid.Visibility = Visibility.Visible;
+            QuizStats stats = quiz.CalcStats();
+            resultsText.Text = string.Format("Known: {0}\r\nPartially Known: {1}\r\nNot known: {2}\r\nNot seen: {3}", stats.CountRight, stats.CountPartial, stats.CountWrong, stats.CountUnseen);
+
         }
 
         void PlayAnswer()
@@ -134,6 +164,14 @@ namespace VirtualEmily
 
             quiz.LoadQuestions(directory);
             quiz.LoadAnswers();
+
+            if (timeLimitSetting.Value.HasValue && timeLimitSetting.Value.Value > 0) {
+                timeLimit = TimeSpan.FromMinutes(timeLimitSetting.Value.Value);
+                finishTime = DateTime.Now + timeLimit;
+            }
+            else {
+                timeLimit = default(TimeSpan);
+            }
 
             PresentNextQuestion();
         }

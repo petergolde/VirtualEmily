@@ -1,0 +1,21 @@
+20 Radicals
+sound0.wav,field.png
+sound1.wav,fire.png
+sound2.wav,moon.png
+sound3.wav,child.png
+sound4.wav,sun.png
+sound5.wav,soil.png
+sound6.wav,hand.png
+sound7.wav,female.png
+sound8.wav,person.png
+sound9.wav,water.png
+sound10.wav,eye.png
+sound11.wav,fish.png
+sound12.wav,door.png
+sound13.wav,tree.png
+sound14.wav,rock.png
+sound15.wav,ear.png
+sound16.wav,mouth.png
+sound17.wav,rain.png
+sound18.wav,heart.png
+sound19.wav,mountain.png
