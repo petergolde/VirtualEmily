@@ -43,6 +43,8 @@ namespace VirtualEmily
             dontKnowButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Hidden;
 
+            buttonAdminister.Visibility = Visibility.Hidden;
+
         }
 
         void PresentNextQuestion()
