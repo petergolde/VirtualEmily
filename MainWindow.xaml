@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VirtualEmily"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="VirtualEmily.MainWindow"
         mc:Ignorable="d"
-        Title="Virtual Emily" Height="511.601" Width="620.824" Loaded="windowLoaded" Closing="windowClosing" Icon="VirtualEmily.ico">
+        Title="Virtual Emily" Height="511.601" Width="620.824" Loaded="windowLoaded" Closing="windowClosing" Icon="VirtualEmily.ico" WindowState="Maximized">
     <Grid>
         <MediaElement x:Name="mediaElement" HorizontalAlignment="Stretch" Margin="0,0,0,92" VerticalAlignment="Stretch" Source="radicals.wmv" LoadedBehavior="Manual" Volume="2" Loaded="mediaLoaded" UnloadedBehavior="Manual"/>
         <Button x:Name="checkButton" Content="Check Answer" HorizontalAlignment="Right" Margin="0,0,10,46" VerticalAlignment="Bottom" Width="114" Click="checkAnswerClicked" Visibility="Visible" Height="34"/>
