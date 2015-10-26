@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:VirtualEmily"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="VirtualEmily.MainWindow"
         mc:Ignorable="d"
-        Title="Virtual Emily" Height="511.601" Width="620.824" Loaded="windowLoaded" Closing="windowClosing">
+        Title="Virtual Emily" Height="511.601" Width="620.824" Loaded="windowLoaded" Closing="windowClosing" Icon="VirtualEmily.ico">
     <Grid>
         <MediaElement x:Name="mediaElement" HorizontalAlignment="Stretch" Margin="0,0,0,92" VerticalAlignment="Stretch" Source="radicals.wmv" LoadedBehavior="Manual" Volume="2" Loaded="mediaLoaded" UnloadedBehavior="Manual"/>
         <Button x:Name="checkButton" Content="Check Answer" HorizontalAlignment="Right" Margin="0,0,10,46" VerticalAlignment="Bottom" Width="114" Click="checkAnswerClicked" Visibility="Visible" Height="34"/>
         <Button x:Name="buttonAdminister" Content="Administer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="administerButtonClicked"/>
         <Button x:Name="correctButton" Content="Correct!" HorizontalAlignment="Right" Margin="0,0,129,46" VerticalAlignment="Bottom" Width="75" Background="#FF07F512" Click="correctButtonClicked" Visibility="Visible" Height="34"/>
         <Button x:Name="wrongButton" Content="Wrong" HorizontalAlignment="Right" Margin="0,0,209,46" VerticalAlignment="Bottom" Width="75" Background="#FFFF5D5D" Click="wrongButtonClicked" Visibility="Visible" Height="34"/>
-        <Button x:Name="startButton" Content="Begin Quiz!" HorizontalAlignment="Right" Margin="0,0,330,31" VerticalAlignment="Bottom" Width="146" Click="startButtonClicked" Height="69" FontSize="18.667" FontFamily="Segoe UI Black"/>
+        <Button x:Name="startButton" Content="Begin Quiz!" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="146" Click="startButtonClicked" Height="69" FontSize="18.667" FontFamily="Segoe UI Black"/>
         <Label x:Name="statusLabel" Content="" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="9.333" Width="170" HorizontalContentAlignment="Right"/>
         <Button x:Name="dontKnowButton" Content="Don't Know" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="114" Click="dontKnowButtonClicked" Visibility="Visible" Height="31"/>
         <Button x:Name="continueButton" Content="Continue" HorizontalAlignment="Right" Margin="0,0,129,46" VerticalAlignment="Bottom" Width="114" Click="continueButtonClicked" Visibility="Visible" Background="#FFDAEE12" Height="34"/>

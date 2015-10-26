@@ -37,7 +37,7 @@ namespace VirtualEmily
                 }
 
                 // To be considered that we fully know it:
-                //  - Have seend at least 3 teams.
+                //  - Have seend at least 3 answers.
                 //  - 3 or more right than wrong.
                 //  - We got it right the last time.
                 // We partially know if we got it at least as right as wrong.
