@@ -49,7 +49,7 @@ namespace VirtualEmily
 
         void PresentNextQuestion()
         {
-            quiz.SaveAnswers(answerData);
+            quiz.SaveAnswers();
 
             QuizStats stats = quiz.CalcStats();
             UpdateStatusGrid(stats);
@@ -118,13 +118,11 @@ namespace VirtualEmily
 
         private void windowLoaded(object sender, RoutedEventArgs e)
         {
-            quiz.LoadQuestions(fileName);
-            quiz.LoadAnswers(answerData);
         }
 
         private void windowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            quiz.SaveAnswers(answerData);
+            quiz.SaveAnswers();
         }
 
 
@@ -132,6 +130,9 @@ namespace VirtualEmily
         {
             startButton.Visibility = Visibility.Hidden;
             buttonAdminister.Visibility = Visibility.Hidden;
+
+            quiz.LoadQuestions(directory);
+            quiz.LoadAnswers();
 
             PresentNextQuestion();
         }

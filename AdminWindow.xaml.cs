@@ -77,7 +77,7 @@ namespace VirtualEmily
 
         private void saveButtonClicked(object sender, RoutedEventArgs e)
         {
-            quiz.SaveQuestions(fileName);
+            quiz.SaveQuestions();
         }
 
         private void addButtonClicked(object sender, RoutedEventArgs e)

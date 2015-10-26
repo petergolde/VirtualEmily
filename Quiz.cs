@@ -9,6 +9,8 @@ namespace VirtualEmily
 {
     public class Quiz
     {
+        string quizTitle = "";
+        string directory;
         List<Question> questions = new List<Question>();
         Random random = new Random();
         Question lastQuestion;
@@ -38,30 +40,36 @@ namespace VirtualEmily
             questions[index] = new Question(pictureFileName, soundFileName);
         }
 
-        //public void SaveQuestions(string fileName)
-        //{
-        //    List<string> output = new List<string>();
-        //    foreach (Question question in questions) {
-        //        output.Add(string.Format("{0},{1}", question.StartTime.TotalSeconds, question.Duration.TotalSeconds));
-        //    }
+        private string QuestionDataFileName
+        {
+            get { return Path.Combine(directory, "questionData.txt"); }
+        }
 
-        //    File.WriteAllLines(fileName, output);
-        //}
+        private string AnswerDataFileName
+        {
+            get { return Path.Combine(directory, "answerData.txt"); }
+        }
 
-        public void SaveQuestions(string fileName)
+
+        public void SaveQuestions()
         {
             List<string> output = new List<string>();
+            output.Add(quizTitle);
             foreach (Question question in questions) {
                 output.Add(string.Format("{0},{1}", question.SoundFileName, question.PictureFileName));
             }
 
-            File.WriteAllLines(fileName, output);
+            File.WriteAllLines(QuestionDataFileName, output);
         }
-        public void LoadQuestions(string fileName)
+        public void LoadQuestions(string directoryName)
         {
-            if (File.Exists(fileName)) {
-                string[] input = File.ReadAllLines(fileName);
-                foreach (string line in input) {
+            directory = directoryName;
+
+            if (File.Exists(QuestionDataFileName)) {
+                string[] input = File.ReadAllLines(QuestionDataFileName);
+                quizTitle = input[0];
+                for (int i = 1; i < input.Length; ++i) {
+                    string line = input[i];
                     string[] fields = line.Split(',');
                     if (fields.Length >= 2) {
                         AddQuestion(fields[1], fields[0]);
@@ -70,7 +78,7 @@ namespace VirtualEmily
             }
         }
 
-        public void SaveAnswers(string fileName)
+        public void SaveAnswers()
         {
             List<string> output = new List<string>();
 
@@ -78,13 +86,13 @@ namespace VirtualEmily
                 output.Add(q.SaveAnswers());
             }
 
-            File.WriteAllLines(fileName, output);
+            File.WriteAllLines(AnswerDataFileName, output);
         }
 
-        public void LoadAnswers(string fileName)
+        public void LoadAnswers()
         {
-            if (File.Exists(fileName)) {
-                string[] input = File.ReadAllLines(fileName);
+            if (File.Exists(AnswerDataFileName)) {
+                string[] input = File.ReadAllLines(AnswerDataFileName);
                 for (int i = 0; i < questions.Count; ++i) {
                     if (i < input.Length) {
                         questions[i].LoadAnswers(input[i]);
