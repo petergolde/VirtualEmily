@@ -66,6 +66,7 @@
       <DependentUpon>AdminWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Question.cs" />
+    <Compile Include="QuestionData.cs" />
     <Compile Include="Quiz.cs" />
     <Compile Include="Util.cs" />
     <Page Include="AdminWindow.xaml">

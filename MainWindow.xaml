@@ -8,7 +8,22 @@
         mc:Ignorable="d"
         Title="Virtual Emily" Height="511.601" Width="620.824" Loaded="windowLoaded" Closing="windowClosing" Icon="VirtualEmily.ico" WindowState="Maximized">
     <Grid>
-        <Grid x:Name="initialGrid" Margin="-10,25,10,-25">
+        <Grid x:Name="initialGrid">
+            <StackPanel HorizontalAlignment="Center" Height="60" Margin="0,-140,0,0" VerticalAlignment="Center" Width="280" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Select quiz: " VerticalAlignment="Top"></Label>
+                    <ComboBox x:Name="comboBoxQuizNames" Height="21" VerticalAlignment="Top" Margin="0,4,0,0"></ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Quiz Type: " VerticalAlignment="Top"></Label>
+                    <ComboBox x:Name="comboBoxQuizType" Height="21" VerticalAlignment="Top" Margin="0,4,0,0" SelectedIndex="0">
+                        <ComboBoxItem>Sound → English</ComboBoxItem>
+                        <ComboBoxItem>English → Sound</ComboBoxItem>
+                        <ComboBoxItem>Chinese Character → Sound</ComboBoxItem>
+                        <ComboBoxItem>Chinese Character → English</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
             <Button x:Name="startButton" Content="Begin Quiz!" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="146" Click="startButtonClicked" Height="69" FontSize="18.667" FontFamily="Segoe UI Black"/>
             <Button x:Name="buttonAdminister" Content="Administer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="administerButtonClicked"/>
             <StackPanel HorizontalAlignment="Center" Height="60" Margin="0,180,0,0" VerticalAlignment="Center" Width="180" Orientation="Horizontal">
@@ -20,6 +35,9 @@
 
         <Grid x:Name="quizGrid">
             <Image x:Name="imageDisplay" HorizontalAlignment="Stretch" Margin="0,0,0,92" VerticalAlignment="Stretch" />
+            <Viewbox Margin="0,0,0,92" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Label x:Name="textDisplay" Content="" FontFamily="SimSun"></Label>
+            </Viewbox>
             <Button x:Name="checkButton" Content="Check Answer" HorizontalAlignment="Right" Margin="0,0,10,46" VerticalAlignment="Bottom" Width="114" Click="checkAnswerClicked" Visibility="Visible" Height="34"/>
             <Button x:Name="correctButton" Content="Correct!" HorizontalAlignment="Right" Margin="0,0,129,46" VerticalAlignment="Bottom" Width="75" Background="#FF07F512" Click="correctButtonClicked" Visibility="Visible" Height="34"/>
             <Button x:Name="wrongButton" Content="Wrong" HorizontalAlignment="Right" Margin="0,0,209,46" VerticalAlignment="Bottom" Width="75" Background="#FFFF5D5D" Click="wrongButtonClicked" Visibility="Visible" Height="34"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -25,9 +26,7 @@ namespace VirtualEmily
     public partial class MainWindow: Window
     {
         Quiz quiz;
-        string fileName = "questionData.txt";
-        string answerData = "answerData.txt";
-        string directory = ".";
+        string rootDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Chinese Quizzes";
         TimeSpan timeLimit;
         DateTime finishTime;
         Question question;
@@ -49,11 +48,29 @@ namespace VirtualEmily
             dontKnowButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Hidden;
 
-            buttonAdminister.Visibility = Visibility.Hidden;
+            buttonAdminister.Visibility = Visibility.Visible;
+
+            FindAllQuizzes();
 
             timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(0.5);
             timer.Start();
+        }
+
+        void FindAllQuizzes()
+        {
+            foreach (string dir in Directory.EnumerateDirectories(rootDirectory)) {
+                string dirName = Path.GetFileName(dir);
+                comboBoxQuizNames.Items.Add(dirName);
+            }
+
+            comboBoxQuizNames.SelectedIndex = 0;
+        }
+
+        string SelectedQuizDirectory()
+        {
+            string dirName = (string)comboBoxQuizNames.SelectedItem;
+            return Path.Combine(rootDirectory, dirName);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -91,10 +108,11 @@ namespace VirtualEmily
 
         void ShowQuestion()
         {
-            string path = Path.GetFullPath(Path.Combine(directory, question.PictureFileName));
-            imageDisplay.Source =  new BitmapImage(new Uri(path));
+            if (question.QuestionStyle == TermStyle.Picture) {
+                string path = question.QuestionString;
+                imageDisplay.Source =  new BitmapImage(new Uri(path));
+            }
         }
-
         void Done()
         {
             quizGrid.Visibility = Visibility.Hidden;
@@ -104,11 +122,13 @@ namespace VirtualEmily
 
         }
 
-        void PlayAnswer()
+        void ShowAnswer()
         {
-            ShowQuestion();
-            SoundPlayer soundPlayer = new SoundPlayer(Path.Combine(directory, question.SoundFileName));
-            soundPlayer.Play();
+            if (question.AnswerStyle == TermStyle.Sound) {
+                string path = question.AnswerString;
+                SoundPlayer soundPlayer = new SoundPlayer(path);
+                soundPlayer.Play();
+            }
         }
 
         private void UpdateStatusGrid(QuizStats stats)
@@ -121,7 +141,7 @@ namespace VirtualEmily
 
         private void administerButtonClicked(object sender, RoutedEventArgs e)
         {
-            new AdminWindow(quiz, fileName).ShowDialog();
+            new AdminWindow(SelectedQuizDirectory()).ShowDialog();
         }
 
         private void wrongButtonClicked(object sender, RoutedEventArgs e)
@@ -144,7 +164,7 @@ namespace VirtualEmily
                 dontKnowButton.Visibility = Visibility.Hidden;
             }
 
-            PlayAnswer();
+            ShowAnswer();
         }
 
         private void windowLoaded(object sender, RoutedEventArgs e)
@@ -159,11 +179,30 @@ namespace VirtualEmily
 
         private void startButtonClicked(object sender, RoutedEventArgs e)
         {
+            TermKind from, to;
+            if (comboBoxQuizType.SelectedIndex == 0) {
+                from = TermKind.ChineseSound; to = TermKind.EnglishWord;
+            }
+            else if (comboBoxQuizType.SelectedIndex == 1) {
+                from = TermKind.EnglishWord; to = TermKind.ChineseSound;
+            }
+            else if (comboBoxQuizType.SelectedIndex == 2) {
+                from = TermKind.ChineseCharacter; to = TermKind.ChineseSound;
+            }
+            else if (comboBoxQuizType.SelectedIndex == 3) {
+                from = TermKind.ChineseCharacter; to = TermKind.EnglishWord;
+            }
+            else {
+                MessageBox.Show("Unsupported type of quiz!");
+                return;
+            }
+
             initialGrid.Visibility = Visibility.Hidden;
             quizGrid.Visibility = Visibility.Visible;
 
-            quiz.LoadQuestions(directory);
-            quiz.LoadAnswers();
+            quiz.LoadQuestions(SelectedQuizDirectory());
+
+            quiz.LoadAnswers(from, to);
 
             if (timeLimitSetting.Value.HasValue && timeLimitSetting.Value.Value > 0) {
                 timeLimit = TimeSpan.FromMinutes(timeLimitSetting.Value.Value);
@@ -184,7 +223,7 @@ namespace VirtualEmily
 
         private void dontKnowButtonClicked(object sender, RoutedEventArgs e)
         {
-            PlayAnswer();
+            ShowAnswer();
 
             dontKnowButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Visible;

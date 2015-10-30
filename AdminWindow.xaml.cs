@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using Path = System.IO.Path;
 
 namespace VirtualEmily
 {
@@ -22,29 +24,92 @@ namespace VirtualEmily
     public partial class AdminWindow: Window
     {
         Quiz quiz;
-        string fileName;
-        string videoFileName = "radicals2.wmv";
+        string directory;
+        string videoFileName;
+        int questionNumber = -1;
 
-        public AdminWindow(Quiz quiz, string filename)
+
+        public AdminWindow(string directory)
         {
             InitializeComponent();
-            this.quiz = quiz;
-            this.fileName = filename;
+            this.quiz = new Quiz();
+            this.directory = directory;
+            quiz.LoadQuestions(directory);
 
             comboQuestionNum.Items.Clear();
             for (int i = 0; i < quiz.QuestionCount; ++i) {
                 comboQuestionNum.Items.Add(i.ToString());
             }
 
-            comboQuestionNum.SelectedIndex = 0;
+            questionNumber = -1;
+            if (quiz.QuestionCount > 0) {
+                comboQuestionNum.SelectedIndex = 0;
+            }
+            else {
+                AddNewQuestion();
+            }
         }
 
-        public int QuestionNumber
+
+        void UpdateQuestion()
         {
-            get { return int.Parse((string) comboQuestionNum.SelectedItem); }
+            if (questionNumber >= 0) {
+                QuestionData qd = new QuestionData();
+                qd.Id = textBoxId.Text;
+                qd.ChineseImageFileName = textBoxChineseImageFileName.Text;
+                qd.ChineseText = textBoxChineseText.Text;
+                qd.EnglishText = textBoxEnglishText.Text;
+                qd.SoundFileName = textBoxSoundFileName.Text;
+
+                quiz.ReplaceQuestion(questionNumber, qd);
+            }
         }
 
-        private void testButtonClicked(object sender, RoutedEventArgs e)
+        void LoadQuestionData(QuestionData qd)
+        {
+            textBoxId.Text = qd.Id;
+            textBoxChineseImageFileName.Text = qd.ChineseImageFileName;
+            textBoxChineseText.Text = qd.ChineseText;
+            textBoxEnglishText.Text = qd.EnglishText;
+            textBoxSoundFileName.Text = qd.SoundFileName;
+        }
+
+
+
+        private void startChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (startTime.Value.HasValue) {
+                TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
+                mediaElement.Position = start;
+                //Util.PlayMedia(mediaElement, start, TimeSpan.FromMilliseconds(50), true);
+            }
+        }
+
+        private void saveButtonClicked(object sender, RoutedEventArgs e)
+        {
+            UpdateQuestion();
+            quiz.SaveQuestions();
+        }
+
+
+
+        private void comboQuestionNumSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateQuestion();
+            questionNumber = int.Parse((string)comboQuestionNum.SelectedItem);
+            LoadQuestionData(quiz.GetQuestionData(questionNumber));
+        }
+
+        private void LoadVideoClicked(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == true) {
+                videoFileName = dialog.FileName;
+                mediaElement.Source = new Uri(videoFileName);
+            }
+        }
+
+        private void TestButtonClicked(object sender, RoutedEventArgs e)
         {
             if (startTime.Value.HasValue && lengthTime.Value.HasValue) {
                 TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
@@ -54,54 +119,36 @@ namespace VirtualEmily
         }
 
 
-        private void buttonUpdateClicked(object sender, RoutedEventArgs e)
-        {
-            if (startTime.Value.HasValue && lengthTime.Value.HasValue) {
-                TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
-                TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
-                string soundFile = CreateSoundFile(QuestionNumber, start, duration);
-                SoundPlayer soundPlayer = new SoundPlayer(soundFile);
-                soundPlayer.Play();
-                quiz.ReplaceQuestion(QuestionNumber, textBoxPicture.Text, soundFile);
-            }
-        }
 
-
-        private void startChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TakeFromVideoClicked(object sender, RoutedEventArgs e)
         {
-            if (startTime.Value.HasValue) {
-                TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
-                Util.PlayMedia(mediaElement, start, TimeSpan.FromMilliseconds(50), true);
-            }
-        }
-
-        private void saveButtonClicked(object sender, RoutedEventArgs e)
-        {
-            quiz.SaveQuestions();
-        }
-
-        private void addButtonClicked(object sender, RoutedEventArgs e)
-        {
-            if (startTime.Value.HasValue && lengthTime.Value.HasValue) {
-                TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
-                TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
-                quiz.AddQuestion(start, duration);
-            }
-        }
-
-        private string CreateSoundFile(int questionNumber, TimeSpan start, TimeSpan duration)
-        {
-            string cmdLineArgs = string.Format("-ss {0} -t {1} -i {2} sound{3}.wav", start.TotalSeconds, duration.TotalSeconds, videoFileName, questionNumber);
+            TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
+            TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
+            string fileName = textBoxId.Text + ".wav";
+            string cmdLineArgs = string.Format("-ss {0} -t {1} -i {2} sound{3}.wav", start.TotalSeconds, duration.TotalSeconds, videoFileName, Path.Combine(directory, fileName));
             Process process = Process.Start("ffmpeg.exe", cmdLineArgs);
             process.WaitForExit();
-            return String.Format("sound{0}.wav", questionNumber);
+            textBoxSoundFileName.Text = fileName;
         }
 
-        private void comboQuestionNumSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void AddNewQuestion()
         {
-            Question question = quiz.GetQuestion(QuestionNumber);
-            startTime.Value = question.StartTime.TotalSeconds;
-            lengthTime.Value = question.Duration.TotalSeconds;
+            ++questionNumber;
+
+            comboQuestionNum.Items.Add(questionNumber.ToString());
+            comboQuestionNum.SelectedIndex = questionNumber;
+
+            textBoxId.Text = "q" + questionNumber.ToString();
+            textBoxChineseImageFileName.Text = "";
+            textBoxChineseText.Text = "";
+            textBoxEnglishText.Text = "";
+            textBoxSoundFileName.Text = "";
+        }
+
+        private void buttonAddNewQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateQuestion();
+            AddNewQuestion();
         }
     }
 }

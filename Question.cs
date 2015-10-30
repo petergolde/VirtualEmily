@@ -8,24 +8,15 @@ namespace VirtualEmily
 {
     public class Question
     {
-        public TimeSpan StartTime { get; private set; }
-        public TimeSpan Duration { get; private set; }
-
-        public string PictureFileName { get; private set; }
-        public string SoundFileName { get; private set; }
+        public TermStyle QuestionStyle;
+        public TermStyle AnswerStyle;
+        public string QuestionString;
+        public string AnswerString;
 
         private List<bool> answers = new List<bool>();
 
-        public Question(TimeSpan start, TimeSpan duration)
+        public Question()
         {
-            StartTime = start;
-            Duration = duration;
-        }
-
-        public Question(string pictureFileName, string soundFileName)
-        {
-            PictureFileName = pictureFileName;
-            SoundFileName = soundFileName;
         }
 
         public QuestionStatus Status
@@ -84,6 +75,8 @@ namespace VirtualEmily
             answers.Add(correct);
         }
     }
+
+    public enum TermStyle { Text, Picture, Sound};
 
     public enum QuestionStatus { NotSeen, Wrong, Partial, Right }
 }
