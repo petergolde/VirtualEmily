@@ -153,22 +153,24 @@ namespace VirtualEmily
             ToTerm = to;
 
             questions.Clear();
+            string[] input = new string[0];
 
             if (File.Exists(AnswerDataFileName)) {
-                string[] input = File.ReadAllLines(AnswerDataFileName);
-                for (int i = 0; i < questionData.Count; ++i) {
-                    QuestionData qd = questionData[i];
-                    Question q = new Question();
+                input = File.ReadAllLines(AnswerDataFileName);
+            }
 
-                    GetQuestionAnswerData(from, qd, out q.QuestionStyle, out q.QuestionString);
-                    GetQuestionAnswerData(to, qd, out q.AnswerStyle, out q.AnswerString);
+            for (int i = 0; i < questionData.Count; ++i) {
+                QuestionData qd = questionData[i];
+                Question q = new Question();
 
-                    if (i < input.Length) {
-                        q.LoadAnswers(input[i]);
-                    }
+                GetQuestionAnswerData(from, qd, out q.QuestionStyle, out q.QuestionString);
+                GetQuestionAnswerData(to, qd, out q.AnswerStyle, out q.AnswerString);
 
-                    questions.Add(q);
+                if (i < input.Length) {
+                    q.LoadAnswers(input[i]);
                 }
+
+                questions.Add(q);
             }
         }
 

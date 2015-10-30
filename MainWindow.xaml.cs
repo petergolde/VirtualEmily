@@ -41,6 +41,7 @@ namespace VirtualEmily
 
             quizGrid.Visibility = Visibility.Hidden;
             doneGrid.Visibility = Visibility.Hidden;
+            initialGrid.Visibility = Visibility.Visible;
 
             wrongButton.Visibility = Visibility.Hidden;
             correctButton.Visibility = Visibility.Hidden;
@@ -111,8 +112,35 @@ namespace VirtualEmily
             if (question.QuestionStyle == TermStyle.Picture) {
                 string path = question.QuestionString;
                 imageDisplay.Source =  new BitmapImage(new Uri(path));
+                imageDisplay.Visibility = Visibility.Visible;
+                textDisplay.Visibility = Visibility.Hidden;
+                buttonReplaySound.Visibility = Visibility.Hidden;
+            }
+            else if (question.QuestionStyle == TermStyle.Text) {
+                textDisplay.Content = question.QuestionString;
+                imageDisplay.Visibility = Visibility.Hidden;
+                textDisplay.Visibility = Visibility.Visible;
+                buttonReplaySound.Visibility = Visibility.Hidden;
+            }
+            else if (question.QuestionStyle == TermStyle.Sound) {
+                string path = question.QuestionString;
+                imageDisplay.Visibility = Visibility.Hidden;
+                textDisplay.Visibility = Visibility.Hidden;
+                buttonReplaySound.Visibility = Visibility.Visible;
+
+                SoundPlayer soundPlayer = new SoundPlayer(path);
+                soundPlayer.Play();
             }
         }
+
+        private void ReplaySoundClicked(object sender, RoutedEventArgs e)
+        {
+            string path = question.QuestionString;
+
+            SoundPlayer soundPlayer = new SoundPlayer(path);
+            soundPlayer.Play();
+        }
+
         void Done()
         {
             quizGrid.Visibility = Visibility.Hidden;
@@ -229,5 +257,6 @@ namespace VirtualEmily
             continueButton.Visibility = Visibility.Visible;
             dontKnow = true;
         }
+
     }
 }
