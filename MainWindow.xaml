@@ -25,7 +25,7 @@
                 </StackPanel>
             </StackPanel>
             <Button x:Name="startButton" Content="Begin Quiz!" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="146" Click="startButtonClicked" Height="69" FontSize="18.667" FontFamily="Segoe UI Black"/>
-            <Button x:Name="buttonAdminister" Content="Administer" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="administerButtonClicked"/>
+            <Button x:Name="buttonAdminister" Content="Edit Quiz" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="75" Click="administerButtonClicked"/>
             <StackPanel HorizontalAlignment="Center" Height="60" Margin="0,180,0,0" VerticalAlignment="Center" Width="180" Orientation="Horizontal">
                 <Label x:Name="label" Content="Time Limit:" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <xctk:IntegerUpDown x:Name="timeLimitSetting" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="0,4,0,0" Value="15"/>
@@ -45,6 +45,9 @@
             <Label x:Name="timeLeftLabel" Content="" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="170" HorizontalContentAlignment="Left"/>
             <Button x:Name="dontKnowButton" Content="Don't Know" HorizontalAlignment="Right" Margin="0,0,10,30" VerticalAlignment="Bottom" Width="114" Click="dontKnowButtonClicked" Visibility="Visible" Height="31"/>
             <Button x:Name="continueButton" Content="Continue" HorizontalAlignment="Right" Margin="0,0,129,66" VerticalAlignment="Bottom" Width="114" Click="continueButtonClicked" Visibility="Visible" Background="#FFDAEE12" Height="34"/>
+            <TextBox x:Name="textBoxEnterAnswer" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,0,248,70" Width="300" Height="30" FontSize="14.667"></TextBox>
+            <TextBox x:Name="textBoxActualAnswer" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Margin="0,0,248,30" Width="300" Height="30" FontSize="14.667"></TextBox>
+            <Button x:Name="closeEnoughButton" Content="Close Enough" HorizontalAlignment="Right" Margin="0,0,157,30" VerticalAlignment="Bottom" Width="86" Click="closeEnoughButtonClicked" Visibility="Visible" Background="#FF07F512" Height="20"/>
             <Grid HorizontalAlignment="Stretch" Height="22" Margin="156,0,157,4" VerticalAlignment="Bottom">
                 <Border BorderBrush="Black" BorderThickness="1">
                     <Grid x:Name="statusGrid"   >
@@ -65,7 +68,7 @@
 
         <Grid x:Name="doneGrid" Visibility="Hidden" >
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <Label Content="Complete!" FontSize="48" FontFamily="Segoe UI Black"/>
+                <Label Content="Complete!" FontSize="48" FontFamily="Segoe UI Black"/>
                 <TextBlock x:Name="resultsText"></TextBlock>
             </StackPanel>
         </Grid>

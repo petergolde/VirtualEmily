@@ -97,14 +97,9 @@ namespace VirtualEmily
             // statusLabel.Content = string.Format("{0} of {1} known", stats.CountRight, stats.Total);
 
             question = quiz.NextQuestion();
-            wrongButton.Visibility = Visibility.Hidden;
-            correctButton.Visibility = Visibility.Hidden;
-            checkButton.Visibility = Visibility.Visible;
-            dontKnowButton.Visibility = Visibility.Visible;
-            continueButton.Visibility = Visibility.Hidden;
-            dontKnow = false;
 
             ShowQuestion();
+            AllowAnswerEntry();
         }
 
         void ShowQuestion()
@@ -133,6 +128,33 @@ namespace VirtualEmily
             }
         }
 
+        void AllowAnswerEntry()
+        {
+            wrongButton.Visibility = Visibility.Hidden;
+            correctButton.Visibility = Visibility.Hidden;
+            continueButton.Visibility = Visibility.Hidden;
+            closeEnoughButton.Visibility = Visibility.Hidden;
+            textBoxActualAnswer.Visibility = Visibility.Hidden;
+
+            checkButton.Visibility = Visibility.Visible;
+            checkButton.IsDefault = true;
+            dontKnowButton.Visibility = Visibility.Visible;
+
+            if (question.AnswerStyle == TermStyle.Sound) {
+                textBoxEnterAnswer.Visibility = Visibility.Hidden;
+            }
+            else if (question.AnswerStyle == TermStyle.Text) {
+                textBoxEnterAnswer.Visibility = Visibility.Visible;
+                textBoxEnterAnswer.Background = Brushes.White;
+                textBoxEnterAnswer.Text = "";
+                textBoxEnterAnswer.IsReadOnly = false;
+                textBoxEnterAnswer.Focus();
+            }
+
+            dontKnow = false;
+
+        }
+
         private void ReplaySoundClicked(object sender, RoutedEventArgs e)
         {
             string path = question.QuestionString;
@@ -156,7 +178,41 @@ namespace VirtualEmily
                 string path = question.AnswerString;
                 SoundPlayer soundPlayer = new SoundPlayer(path);
                 soundPlayer.Play();
+
+                if (!dontKnow) {
+                    wrongButton.Visibility = Visibility.Visible;
+                    correctButton.Visibility = Visibility.Visible;
+                }
+                else {
+                    continueButton.Visibility = Visibility.Visible;
+                }
             }
+            else if (question.AnswerStyle == TermStyle.Text) {
+                if (!dontKnow && TextAnswerCorrect()) {
+                    textBoxEnterAnswer.Background = Brushes.Green;
+                }
+                else {
+                    textBoxActualAnswer.Text = question.AnswerString;
+                    textBoxActualAnswer.Background = Brushes.Green;
+                    textBoxActualAnswer.Visibility = Visibility.Visible;
+                    textBoxEnterAnswer.Background = Brushes.Red;
+                    if (dontKnow)
+                        textBoxEnterAnswer.Visibility = Visibility.Hidden;
+                    else
+                        closeEnoughButton.Visibility = Visibility.Visible;
+                }
+
+                textBoxEnterAnswer.IsReadOnly = true;
+                continueButton.Visibility = Visibility.Visible;
+            }
+
+            dontKnowButton.Visibility = Visibility.Hidden;
+
+        }
+
+        bool TextAnswerCorrect()
+        {
+            return !dontKnow && textBoxEnterAnswer.Text.Trim().Equals(question.AnswerString.Trim(), StringComparison.CurrentCultureIgnoreCase);
         }
 
         private void UpdateStatusGrid(QuizStats stats)
@@ -186,11 +242,6 @@ namespace VirtualEmily
 
         private void checkAnswerClicked(object sender, RoutedEventArgs e)
         {
-            if (!dontKnow) {
-                wrongButton.Visibility = Visibility.Visible;
-                correctButton.Visibility = Visibility.Visible;
-                dontKnowButton.Visibility = Visibility.Hidden;
-            }
 
             ShowAnswer();
         }
@@ -245,17 +296,28 @@ namespace VirtualEmily
 
         private void continueButtonClicked(object sender, RoutedEventArgs e)
         {
+            if (question.AnswerStyle == TermStyle.Sound)
+                quiz.RecordAnswer(question, false);
+            else
+                quiz.RecordAnswer(question, TextAnswerCorrect());
+
+            PresentNextQuestion();
+        }
+
+        private void closeEnoughButtonClicked(object sender, RoutedEventArgs e)
+        {
             quiz.RecordAnswer(question, false);
             PresentNextQuestion();
         }
 
         private void dontKnowButtonClicked(object sender, RoutedEventArgs e)
         {
+            dontKnow = true;
+
             ShowAnswer();
 
             dontKnowButton.Visibility = Visibility.Hidden;
             continueButton.Visibility = Visibility.Visible;
-            dontKnow = true;
         }
 
     }
