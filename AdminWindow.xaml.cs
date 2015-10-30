@@ -125,7 +125,7 @@ namespace VirtualEmily
             TimeSpan start = TimeSpan.FromSeconds(startTime.Value.Value);
             TimeSpan duration = TimeSpan.FromSeconds(lengthTime.Value.Value);
             string fileName = textBoxId.Text + ".wav";
-            string cmdLineArgs = string.Format("-ss {0} -t {1} -i {2} sound{3}.wav", start.TotalSeconds, duration.TotalSeconds, videoFileName, Path.Combine(directory, fileName));
+            string cmdLineArgs = string.Format("-ss {0} -t {1} -i \"{2}\" \"{3}\"", start.TotalSeconds, duration.TotalSeconds, videoFileName, Path.Combine(directory, fileName));
             Process process = Process.Start("ffmpeg.exe", cmdLineArgs);
             process.WaitForExit();
             textBoxSoundFileName.Text = fileName;
