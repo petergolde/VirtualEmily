@@ -306,7 +306,7 @@ namespace VirtualEmily
 
         private void closeEnoughButtonClicked(object sender, RoutedEventArgs e)
         {
-            quiz.RecordAnswer(question, false);
+            quiz.RecordAnswer(question, true);
             PresentNextQuestion();
         }
 
